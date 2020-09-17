@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DogGo.Controllers
 {
-    public class WalkerController : Controller
+    public class WalkersController : Controller
     {
 
         private readonly IWalkerRepository _walkerRepo;
 
         // ASP.NET will give us an instance of our Walker Repository. This is called "Dependency Injection"
-        public WalkerController(IWalkerRepository walkerRepository)
+        public WalkersController(IWalkerRepository walkerRepository)
         {
             _walkerRepo = walkerRepository;
         }
