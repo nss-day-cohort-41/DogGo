@@ -26,6 +26,22 @@ namespace DogGo.Repositories
 
         public Owner GetOwnerById(int id)
         {
+
+            string abc = null;
+            string def = "";
+            def = null;
+            abc = "asdlfjsadlkjsdf";
+
+            int tigerCount = 0;
+
+            DogRepository dr = new DogRepository(_config);
+            dr = null;
+
+            if (abc == def)
+            {
+
+            }
+
             using (SqlConnection conn = Connection)
             {
                 conn.Open();

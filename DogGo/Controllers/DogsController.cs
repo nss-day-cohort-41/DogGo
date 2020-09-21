@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DogGo.Models;
 using DogGo.Models.ViewModels;
 using DogGo.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DogGo.Controllers
 {
+    [Authorize]
     public class DogsController : Controller
     {
         private readonly IDogRepository _dogRepository;
@@ -21,10 +24,17 @@ namespace DogGo.Controllers
             _ownerRepository = ownerRepository;
         }
 
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
+
         // GET: DogsController
         public ActionResult Index()
         {
-            List<Dog> dogs = _dogRepository.GetAllDogs();
+            int ownerId = GetCurrentUserId();
+            List<Dog> dogs = _dogRepository.GetDogsByOwnerId(ownerId);
             return View(dogs);
         }
 
@@ -36,7 +46,6 @@ namespace DogGo.Controllers
             DogFormViewModel vm = new DogFormViewModel()
             {
                 Dog = new Dog(),
-                Owners = _ownerRepository.GetAll(),
             };
 
             return View(vm);
@@ -48,6 +57,9 @@ namespace DogGo.Controllers
         {
             try
             {
+
+                dog.OwnerId = GetCurrentUserId();
+
                 // LOOK AT THIS
                 //  Let's save a new dog
                 //  This new dog may or may not have Notes and/or an ImageUrl
@@ -63,7 +75,6 @@ namespace DogGo.Controllers
                 DogFormViewModel vm = new DogFormViewModel()
                 {
                     Dog = dog,
-                    Owners = _ownerRepository.GetAll(),
                 };
 
                 return View(vm);
